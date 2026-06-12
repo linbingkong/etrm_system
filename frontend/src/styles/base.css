@@ -1,0 +1,54 @@
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  color: #1f2937;
+  font-family:
+    Inter,
+    "PingFang SC",
+    "Microsoft YaHei",
+    sans-serif;
+}
+
+.app-shell {
+  min-height: 100%;
+}
+
+.app-shell__aside {
+  border-right: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.app-shell__brand {
+  min-height: 56px;
+  padding: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.app-shell__menu {
+  border-right: 0;
+}
+
+.app-shell__header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e5e7eb;
+  background: #ffffff;
+}
+
+.app-shell__header h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.app-shell__main {
+  background: #f8fafc;
+}
