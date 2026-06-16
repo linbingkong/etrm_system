@@ -7,10 +7,10 @@ describe('menuItems', () => {
     expect(menuItems).toHaveLength(13);
   });
 
-  it('contains 88 page menu items', () => {
+  it('contains 89 page menu items', () => {
     const pageMenus = flattenMenuItems(menuItems).filter((item) => item.type === 'menu');
 
-    expect(pageMenus).toHaveLength(88);
+    expect(pageMenus).toHaveLength(89);
   });
 
   it('contains key routes and permissions', () => {
@@ -19,10 +19,12 @@ describe('menuItems', () => {
     const permissions = pageMenus.map((item) => item.permission);
 
     expect(paths).toContain('/trading/spot-bid');
+    expect(paths).toContain('/market-monitoring/price-forecast');
     expect(paths).toContain('/settlement/review');
     expect(paths).toContain('/system-admin/menus');
     expect(paths).toContain('/integrations/shandong-api');
     expect(permissions).toContain('trading:spot-bid');
+    expect(permissions).toContain('market-monitoring:price-forecast');
     expect(permissions).toContain('settlement:review');
   });
 

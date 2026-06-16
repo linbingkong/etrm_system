@@ -23,6 +23,7 @@ const page = (
   path: string,
   priority: MenuPriority,
   sort: number,
+  component?: string,
 ): MenuItem => ({
   id: `${module}-${slug}`,
   parentId: module,
@@ -35,22 +36,24 @@ const page = (
   visible: visibleByPriority(priority),
   permission: `${module}:${slug}`,
   metaTitle: title,
+  component,
 });
 
 export const menuItems: MenuItem[] = [
   directory('dashboard', '工作台', '/dashboard', 1, [
-    page('dashboard', 'home', '工作台首页', '/dashboard', 'P0', 1),
+    page('dashboard', 'home', '工作台首页', '/dashboard', 'P0', 1, 'dashboard/DashboardHome'),
     page('dashboard', 'quick-nav', '快捷导航配置', '/dashboard/quick-nav', 'P1', 2),
     page('dashboard', 'notices', '通知中心', '/dashboard/notices', 'P1', 3),
   ]),
   directory('market-monitoring', '市场监测', '/market-monitoring', 2, [
     page('market-monitoring', 'overview', '市场行情总览', '/market-monitoring/overview', 'P0', 1),
     page('market-monitoring', 'prices', '价格监测', '/market-monitoring/prices', 'P0', 2),
-    page('market-monitoring', 'supply-demand', '供需分析', '/market-monitoring/supply-demand', 'P1', 3),
-    page('market-monitoring', 'tie-line', '跨省联络线', '/market-monitoring/tie-line', 'P1', 4),
-    page('market-monitoring', 'weather', '气象监测', '/market-monitoring/weather', 'P1', 5),
-    page('market-monitoring', 'trading-calendar', '交易日历', '/market-monitoring/trading-calendar', 'P1', 6),
-    page('market-monitoring', 'market-params', '市场参数', '/market-monitoring/market-params', 'P2', 7),
+    page('market-monitoring', 'price-forecast', '价格预测', '/market-monitoring/price-forecast', 'P0', 3),
+    page('market-monitoring', 'supply-demand', '供需分析', '/market-monitoring/supply-demand', 'P1', 4),
+    page('market-monitoring', 'tie-line', '跨省联络线', '/market-monitoring/tie-line', 'P1', 5),
+    page('market-monitoring', 'weather', '气象监测', '/market-monitoring/weather', 'P1', 6),
+    page('market-monitoring', 'trading-calendar', '交易日历', '/market-monitoring/trading-calendar', 'P1', 7),
+    page('market-monitoring', 'market-params', '市场参数', '/market-monitoring/market-params', 'P2', 8),
   ]),
   directory('trading', '交易管理', '/trading', 3, [
     page('trading', 'overview', '交易总览', '/trading/overview', 'P0', 1),

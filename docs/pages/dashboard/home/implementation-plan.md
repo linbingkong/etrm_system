@@ -51,6 +51,7 @@
 frontend/src/views/dashboard/DashboardHome.vue
 frontend/src/views/dashboard/dashboard.types.ts
 frontend/src/views/dashboard/dashboard.mock.ts
+frontend/src/views/dashboard/dashboard-chart.ts
 frontend/src/views/dashboard/components/WorkbenchHeader.vue
 frontend/src/views/dashboard/components/KpiCardGrid.vue
 frontend/src/views/dashboard/components/QuickNavPanel.vue
@@ -64,9 +65,56 @@ frontend/tests/dashboard-home.spec.ts
 修改文件：
 
 ```text
+frontend/src/styles/base.css
 frontend/src/router/menu-items.ts
 frontend/src/router/build-routes.ts
 ```
+
+## 4.1 视觉落地要求
+
+工作台首页必须遵循 `docs/pages/dashboard/home/prototype-design.md` 和 `docs/pages/pages_design_V1.md`。实现时优先在 `frontend/src/styles/base.css` 增加全局 CSS 变量：
+
+```css
+:root {
+  --theme-bg: #0A1128;
+  --theme-card-bg: rgba(17, 28, 68, 0.75);
+  --theme-panel-bg: #111C44;
+  --color-primary: #00F2FE;
+  --color-secondary: #0072FF;
+  --color-success: #00E676;
+  --color-danger: #FF3860;
+  --color-warning: #FFB300;
+  --color-muted: #8F9BBA;
+  --border-glow: rgba(0, 242, 254, 0.15);
+  --shadow-glow: 0 0 8px rgba(0, 242, 254, 0.3);
+  --font-number: "Roboto Mono", "DIN Alternate", monospace;
+}
+```
+
+页面容器使用深色背景 `--theme-bg`；工作台卡片使用半透明深蓝背景、`1px` 微光边框、`2px - 4px` 小圆角和 `12px/16px` 微缝间距。禁止使用浅色普通后台卡片作为工作台主视觉。
+
+## 4.2 页面布局要求
+
+`DashboardHome.vue` 按以下结构实现：
+
+```text
+DashboardHome
+├── WorkbenchHeader
+├── KpiCardGrid
+├── main-grid
+│   ├── TrendChartPanel
+│   └── TaskPanel
+└── bottom-grid
+    ├── QuickNavPanel
+    ├── NoticePanel
+    └── BusinessDataPanel
+```
+
+响应式规则：
+
+- 桌面端：KPI 5 列；趋势图占 `2/3`，任务区占 `1/3`；底部为三列或 `3:3:2`。
+- 中屏：KPI 3 + 2 换行；趋势图和任务区上下排列；底部两列。
+- 移动端：全部单列；快捷导航两列按钮；趋势图高度不低于 `280px`。
 
 ## 5. 数据模型
 
@@ -96,12 +144,14 @@ export interface QuickNavItem {
   title: string;
   path: string;
   permission: string;
+  description: string;
 }
 
 export interface TrendPoint {
   time: string;
   dayAheadPrice: number;
   realtimePrice: number;
+  limitPrice?: number;
 }
 
 export interface WorkbenchTask {
@@ -110,6 +160,7 @@ export interface WorkbenchTask {
   module: string;
   priority: 'high' | 'medium' | 'low';
   dueText: string;
+  path: string;
 }
 
 export interface NoticeItem {
@@ -123,8 +174,19 @@ export interface BusinessDataItem {
   title: string;
   value: string;
   description: string;
+  status: 'normal' | 'success' | 'warning' | 'danger';
 }
 ```
+
+`dashboard.mock.ts` 首版数据必须覆盖：
+
+- 1 个 `WorkbenchProfile`。
+- 5 个 `KpiItem`，对应今日交易电量、月度交易电量、综合均价、预估收益、偏差率。
+- 6 个 `QuickNavItem`，对应现货交易申报、D1 曲线申报、结算审核、合同列表、价格监测、策略列表。
+- 至少 8 个 `TrendPoint`，包含日前价格和实时价格。
+- 至少 4 个 `WorkbenchTask`，覆盖交易、结算、合同和风险提醒。
+- 至少 4 个 `NoticeItem`，覆盖市场动态、系统公告和风险提示。
+- 至少 4 个 `BusinessDataItem`。
 
 ## 6. 组件职责
 
@@ -132,10 +194,29 @@ export interface BusinessDataItem {
 - `WorkbenchHeader.vue`：展示用户、角色、交易日、天气和市场状态。
 - `KpiCardGrid.vue`：展示 KPI 指标卡片。
 - `QuickNavPanel.vue`：展示高频入口，点击后进入对应菜单路由。
-- `TrendChartPanel.vue`：展示日前/实时价格趋势图，ECharts option 提取为纯函数。
+- `TrendChartPanel.vue`：展示日前/实时价格趋势图，ECharts option 从 `dashboard-chart.ts` 引入。
 - `TaskPanel.vue`：展示待办任务和优先级。
 - `NoticePanel.vue`：展示系统公告、市场动态和风险提醒。
 - `BusinessDataPanel.vue`：展示首页 BDC 业务数据卡片。
+
+组件状态要求：
+
+- 列表类组件必须支持空数据状态。
+- 任务和通知必须能按 `priority` 或 `type` 映射到风险红、预警黄、安全绿。
+- KPI 数字必须使用 `--font-number`。
+- 所有卡片类组件使用统一类名，例如 `.dashboard-card`，避免每个组件重复定义不同卡片风格。
+
+## 6.1 ECharts 配置要求
+
+新增 `dashboard-chart.ts`，导出 `buildPriceTrendOption(points: TrendPoint[])`。要求：
+
+- 包含日前价格和实时价格两条折线。
+- 使用深色背景透明配置，坐标轴和图例适配深色模式。
+- 日前价格线使用 `#00F2FE`。
+- 实时价格线使用 `#FFB300`。
+- 面积渐变从 `rgba(0, 242, 254, 0.2)` 过渡到透明。
+- 预留 `markLine` 表达限价或风险阈值。
+- `animationDuration` 设置为 `2000`，`animationEasing` 设置为 `cubicOut`。
 
 ## 7. 路由接入
 
@@ -161,6 +242,15 @@ component: 'dashboard/DashboardHome'
 - 待办任务列表可见。
 - 动态通知列表可见。
 - 趋势图容器存在，并能生成日前/实时两条序列的 ECharts option。
+- `buildPriceTrendOption` 返回两条 series，并包含 `markLine`。
+- P0 工作台页面仍能通过菜单路由进入。
+
+视觉验收要求：
+
+- 页面根节点具备深色控制台背景。
+- KPI 数字元素使用数字字体类名。
+- 卡片组件具备微光边框和小圆角。
+- 风险类任务或通知具备 danger/warning 状态样式。
 
 ## 9. 验证命令
 
@@ -176,6 +266,8 @@ npm run build
 - 前端构建通过。
 - `/dashboard` 展示真实工作台首页。
 - 其他菜单仍可继续使用占位页。
+- 页面符合 `prototype-design.md` 的深色控制台布局。
+- 桌面、中屏、移动端布局不出现内容重叠。
 
 ## 10. 后续扩展
 
