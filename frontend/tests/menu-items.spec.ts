@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { flattenMenuItems, menuItems } from '../src/router/menu-items';
+import { flattenMenuItems, menuItems, visibleMenuItems } from '../src/router/menu-items';
 
 describe('menuItems', () => {
   it('contains 13 top-level modules', () => {
@@ -26,6 +26,14 @@ describe('menuItems', () => {
     expect(permissions).toContain('trading:spot-bid');
     expect(permissions).toContain('market-monitoring:price-forecast');
     expect(permissions).toContain('settlement:review');
+  });
+
+  it('shows completed market monitoring pages in the sidebar menu', () => {
+    const visiblePaths = flattenMenuItems(visibleMenuItems(menuItems)).map((item) => item.path);
+
+    expect(visiblePaths).toContain('/market-monitoring/market-params');
+    expect(visiblePaths).toContain('/contracts/expiry-alerts');
+    expect(visiblePaths).toContain('/system-admin/visit-analysis');
   });
 
   it('hides P2 page menus by default', () => {

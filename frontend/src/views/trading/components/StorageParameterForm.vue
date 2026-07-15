@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { StorageStrategyRequest } from '../trading.types';
 
-const props = defineProps<{ model: StorageStrategyRequest; loading: boolean }>();
-defineEmits<{ generate: [] }>();
+const props = defineProps<{ model: StorageStrategyRequest; loading: boolean; strategyName: string }>();
+defineEmits<{ generate: []; 'update:strategyName': [value: string] }>();
 
 type NumericField =
   | 'p_charge_max_mw'
@@ -60,7 +60,7 @@ function stepHours(field: StepField) {
     <div class="parameter-form__grid">
       <label>
         <span>策略名称</span>
-        <input name="strategy_name" value="策略1" />
+        <input name="strategy_name" :value="strategyName" @input="$emit('update:strategyName', ($event.target as HTMLInputElement).value)" />
       </label>
       <label>
         <span>额定充电功率</span>

@@ -13,6 +13,10 @@ import type {
   PriceSummaryItem,
   PriceDetailRow,
   SupplyDemandItem,
+  SupplyDemandSlot,
+  TieLineFlow,
+  TradingCalendarEvent,
+  WeatherSlot,
 } from './market-monitoring.types';
 
 export const marketFilter: MarketFilter = {
@@ -147,6 +151,34 @@ export const supplyDemandItems: SupplyDemandItem[] = [
   { key: 'net-load', title: '净负荷', value: '68,540', unit: 'MW', status: 'warning', path: '/market-monitoring/supply-demand' },
 ];
 
+export const supplyDemandSlots: SupplyDemandSlot[] = [
+  { timeRange: '00:00-04:00', availableSupply: 76800, forecastDemand: 61200, reserve: 8200, netLoad: 58400, marginRate: 18.6, riskLevel: 'low', suggestion: '低负荷时段，常规跟踪即可。' },
+  { timeRange: '04:00-08:00', availableSupply: 78200, forecastDemand: 62800, reserve: 7900, netLoad: 60100, marginRate: 17.2, riskLevel: 'low', suggestion: '新能源出力爬升，关注低价窗口。' },
+  { timeRange: '08:00-12:00', availableSupply: 79600, forecastDemand: 70400, reserve: 6800, netLoad: 65200, marginRate: 11.6, riskLevel: 'medium', suggestion: '供需裕度收窄，建议联动价格预测。' },
+  { timeRange: '12:00-16:00', availableSupply: 81200, forecastDemand: 69200, reserve: 7200, netLoad: 63800, marginRate: 14.8, riskLevel: 'medium', suggestion: '午间价格偏低，可评估申报策略。' },
+  { timeRange: '16:00-18:00', availableSupply: 82400, forecastDemand: 74400, reserve: 6120, netLoad: 68540, marginRate: 9.7, riskLevel: 'high', suggestion: '晚高峰前供需裕度偏低，复核现货申报量价。' },
+  { timeRange: '18:00-21:00', availableSupply: 81420, forecastDemand: 75680, reserve: 5360, netLoad: 71820, marginRate: 7.1, riskLevel: 'high', suggestion: '风险时段，建议提高申报校验频率并关注实时价格。' },
+  { timeRange: '21:00-24:00', availableSupply: 79200, forecastDemand: 68400, reserve: 6900, netLoad: 64200, marginRate: 13.6, riskLevel: 'medium', suggestion: '高峰回落，持续观察实时出清变化。' },
+];
+
+export const tieLineFlows: TieLineFlow[] = [
+  { id: 'tie-1', name: '鲁豫通道', direction: '山东 -> 河南', plannedFlow: 4200, actualFlow: 4380, availableCapacity: 4800, utilizationRate: 91.3, status: 'danger', impact: '利用率接近上限，可能压缩省间交易空间。' },
+  { id: 'tie-2', name: '鲁冀通道', direction: '河北 -> 山东', plannedFlow: 2600, actualFlow: 2480, availableCapacity: 3600, utilizationRate: 68.9, status: 'normal', impact: '潮流平稳，可作为常规省间购电参考。' },
+  { id: 'tie-3', name: '鲁苏通道', direction: '山东 -> 江苏', plannedFlow: 3100, actualFlow: 3280, availableCapacity: 4200, utilizationRate: 78.1, status: 'warning', impact: '利用率抬升，晚高峰需关注断面约束。' },
+  { id: 'tie-4', name: '鲁皖通道', direction: '安徽 -> 山东', plannedFlow: 1800, actualFlow: 1660, availableCapacity: 3000, utilizationRate: 55.3, status: 'normal', impact: '剩余容量充足，可继续跟踪交易机会。' },
+  { id: 'tie-5', name: '鲁晋通道', direction: '山西 -> 山东', plannedFlow: 3600, actualFlow: 3520, availableCapacity: 4000, utilizationRate: 88.0, status: 'warning', impact: '通道负载偏高，需联动中长期交易确认。' },
+  { id: 'tie-6', name: '鲁蒙通道', direction: '内蒙古 -> 山东', plannedFlow: 2200, actualFlow: 2050, availableCapacity: 3600, utilizationRate: 56.9, status: 'normal', impact: '新能源外送保持稳定。' },
+];
+
+export const weatherSlots: WeatherSlot[] = [
+  { id: 'weather-1', area: '山东全网', timeRange: '08:00-12:00', condition: '晴', temperature: 31.6, windSpeed: 4.8, irradiance: 780, rainProbability: 8, loadImpact: '制冷负荷抬升', renewableImpact: '光伏出力较高', riskLevel: 'medium', suggestion: '午间关注低价窗口和新能源消纳压力。' },
+  { id: 'weather-2', area: '鲁中', timeRange: '12:00-16:00', condition: '晴热', temperature: 34.2, windSpeed: 3.1, irradiance: 860, rainProbability: 5, loadImpact: '工商业负荷偏高', renewableImpact: '光伏高位运行', riskLevel: 'medium', suggestion: '结合供需分析复核午后净负荷回升速度。' },
+  { id: 'weather-3', area: '鲁西北', timeRange: '16:00-20:00', condition: '多云', temperature: 35.1, windSpeed: 5.6, irradiance: 410, rainProbability: 22, loadImpact: '晚峰制冷负荷高', renewableImpact: '光伏快速回落，风电略有支撑', riskLevel: 'high', suggestion: '晚高峰需关注价格预测上沿和现货申报风险。' },
+  { id: 'weather-4', area: '胶东', timeRange: '00:00-06:00', condition: '阴', temperature: 25.8, windSpeed: 7.2, irradiance: 0, rainProbability: 18, loadImpact: '夜间负荷平稳', renewableImpact: '风电出力改善', riskLevel: 'low', suggestion: '低负荷时段保持常规跟踪。' },
+  { id: 'weather-5', area: '鲁南', timeRange: '18:00-22:00', condition: '雷阵雨', temperature: 29.4, windSpeed: 6.4, irradiance: 60, rainProbability: 68, loadImpact: '降雨压低部分制冷负荷', renewableImpact: '光伏低位，风电波动加大', riskLevel: 'high', suggestion: '关注新能源波动和实时价格偏差。' },
+  { id: 'weather-6', area: '半岛沿海', timeRange: '10:00-14:00', condition: '晴间多云', temperature: 30.3, windSpeed: 8.1, irradiance: 720, rainProbability: 12, loadImpact: '负荷温和抬升', renewableImpact: '风光出力均较好', riskLevel: 'low', suggestion: '可作为省内新能源出力支撑参考。' },
+];
+
 export const marketRiskEvents: MarketRiskEvent[] = [
   { id: 'risk-1', title: '09:00 实时价格越限', level: 'high', source: '价格监测', time: '09:08', description: '实时出清价较日前价差扩大至 96.40 元/MWh。', path: '/market-monitoring/prices' },
   { id: 'risk-2', title: '晚高峰供需裕度偏低', level: 'high', source: '供需分析', time: '12:40', description: '18:00-20:00 供需裕度低于 10%，需关注申报风险。', path: '/trading/spot-bid' },
@@ -159,6 +191,16 @@ export const marketQuickLinks: MarketQuickLink[] = [
   { title: '现货交易申报', path: '/trading/spot-bid', description: '进入现货量价申报' },
   { title: 'D1 曲线申报', path: '/trading/d1-curve', description: '维护 D1 发电曲线' },
   { title: '交易日历', path: '/market-monitoring/trading-calendar', description: '查看关键交易节点' },
+];
+
+export const tradingCalendarEvents: TradingCalendarEvent[] = [
+  { id: 'calendar-1', time: '09:30', title: '日前价格发布', category: 'disclosure', module: '市场监测', status: 'done', action: '查看价格曲线', path: '/market-monitoring/prices' },
+  { id: 'calendar-2', time: '11:00', title: '中长期成交确认', category: 'declaration', module: '交易管理', status: 'done', action: '查看合约台账', path: '/trading/long-term' },
+  { id: 'calendar-3', time: '13:45', title: '申报窗口关闭', category: 'declaration', module: '现货交易', status: 'active', action: '进入现货申报', path: '/trading/spot-bid' },
+  { id: 'calendar-4', time: '15:30', title: '实时滚动出清', category: 'clearing', module: '市场监测', status: 'pending', action: '跟踪出清价格', path: '/market-monitoring/prices' },
+  { id: 'calendar-5', time: '17:00', title: 'D1 曲线提交截止', category: 'declaration', module: '交易管理', status: 'risk', action: '复核 D1 曲线', path: '/trading/d1-curve' },
+  { id: 'calendar-6', time: '18:30', title: '结算数据发布', category: 'settlement', module: '结算管理', status: 'pending', action: '查看结算单', path: '/settlement/bills' },
+  { id: 'calendar-7', time: '20:00', title: '偏差费用初核', category: 'settlement', module: '结算管理', status: 'pending', action: '进入费用审核', path: '/settlement/rt-fee-check' },
 ];
 
 export const priceMonitorTabs: PriceMonitorTab[] = [

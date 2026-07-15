@@ -46,6 +46,43 @@ export interface TradingTodo {
   path: string;
 }
 
+export interface LongTermTradeContract {
+  id: string;
+  variety: string;
+  counterparty: string;
+  period: string;
+  volumeMwh: number;
+  price: number;
+  progress: number;
+  status: 'executing' | 'pending-confirm' | 'completed' | 'warning';
+}
+
+export interface TradingWorkItem {
+  id: string;
+  title: string;
+  module: string;
+  priority: 'high' | 'medium' | 'low';
+  deadline: string;
+  owner: string;
+  status: 'todo' | 'processing' | 'done' | 'returned';
+  result?: string;
+  relatedNo: string;
+  path: string;
+}
+
+export interface TradingConstraintRule {
+  id: string;
+  category: 'unit' | 'storage' | 'price' | 'declaration';
+  name: string;
+  target: string;
+  parameter: string;
+  limitText: string;
+  effectivePeriod: string;
+  impactModule: string;
+  status: 'active' | 'review' | 'warning' | 'disabled';
+  owner: string;
+}
+
 export interface SpotBidPoint {
   time: string;
   forecastLoad: number;
@@ -133,4 +170,12 @@ export interface StorageStrategyDraft {
   name: string;
   status: 'draft' | 'generated' | 'error';
   updatedAt: string;
+}
+
+export type StorageStrategyStage = 'parameters' | 'strategy' | 'profit';
+
+export interface StorageSavedStrategy extends StorageStrategyDraft {
+  request: StorageStrategyRequest;
+  result: StorageStrategyResponse;
+  stage: StorageStrategyStage;
 }

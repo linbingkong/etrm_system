@@ -32,8 +32,8 @@ describe('SpotBid', () => {
     expect(wrapper.find('[data-test="storage-strategy-list"]').exists()).toBe(true);
     expect(wrapper.find('[data-test="storage-stepper"]').exists()).toBe(true);
     expect(wrapper.find('[data-test="storage-parameter-form"]').exists()).toBe(true);
-    expect(wrapper.find('[data-test="storage-strategy-result"]').exists()).toBe(true);
-    expect(wrapper.find('[data-test="storage-profit-panel"]').exists()).toBe(true);
+    expect(wrapper.find('[data-test="storage-strategy-result"]').exists()).toBe(false);
+    expect(wrapper.find('[data-test="storage-profit-panel"]').exists()).toBe(false);
     expect(wrapper.text()).toContain('填写参数');
     expect(wrapper.text()).toContain('充放电策略');
     expect(wrapper.text()).toContain('策略收益测算');
@@ -52,6 +52,75 @@ describe('SpotBid', () => {
     expect(getXAxisDataLength(option96)).toBe(96);
     expect(defaultStorageStrategyRequest.charge_price_signal).toHaveLength(96);
     expect(defaultStorageStrategyRequest.discharge_price_signal).toHaveLength(96);
+  });
+
+  it('reveals strategy and profit sections step by step', async () => {
+    const fetchMock = mockStorageStrategyFetch();
+    const wrapper = mount(SpotBid, {
+      global: {
+        stubs: {
+          StoragePriceForecastChart: true,
+          StorageStrategyChart: true,
+        },
+      },
+    });
+
+    expect(wrapper.find('[data-test="storage-strategy-chart"]').exists()).toBe(false);
+    expect(wrapper.find('[data-test="storage-strategy-result"]').exists()).toBe(false);
+    expect(wrapper.find('[data-test="storage-profit-panel"]').exists()).toBe(false);
+
+    await wrapper.find('[data-test="generate-storage-strategy"]').trigger('click');
+    await flushPromises();
+
+    expect(wrapper.find('[data-test="storage-strategy-chart"]').exists()).toBe(true);
+    expect(wrapper.find('[data-test="storage-strategy-result"]').exists()).toBe(true);
+    expect(wrapper.find('[data-test="storage-profit-panel"]').exists()).toBe(false);
+
+    await wrapper.find('[data-test="calculate-storage-profit"]').trigger('click');
+
+    expect(wrapper.find('[data-test="storage-profit-panel"]').exists()).toBe(true);
+    fetchMock.mockRestore();
+  });
+
+  it('saves current strategy and restores it from the strategy list', async () => {
+    const fetchMock = mockStorageStrategyFetch();
+    const wrapper = mount(SpotBid, {
+      global: {
+        stubs: {
+          StoragePriceForecastChart: true,
+          StorageStrategyChart: true,
+        },
+      },
+    });
+
+    await wrapper.find('[data-test="generate-storage-strategy"]').trigger('click');
+    await flushPromises();
+    await wrapper.find('[data-test="charge-segment-price-0"]').setValue('88');
+    await wrapper.find('[data-test="save-storage-strategy"]').trigger('click');
+
+    expect(wrapper.findAll('[data-test="saved-storage-strategy"]')).toHaveLength(1);
+    expect(wrapper.find('[data-test="saved-storage-strategy"]').text()).toContain('策略1');
+
+    await wrapper.find('[data-test="charge-segment-price-0"]').setValue('500');
+    await wrapper.find('[data-test="saved-storage-strategy"]').trigger('click');
+
+    expect(wrapper.find<HTMLInputElement>('[data-test="charge-segment-price-0"]').element.value).toBe('88');
+    fetchMock.mockRestore();
+  });
+
+  it('places the save action at the bottom of the page', () => {
+    const wrapper = mount(SpotBid, {
+      global: {
+        stubs: {
+          StoragePriceForecastChart: true,
+          StorageStrategyChart: true,
+        },
+      },
+    });
+
+    expect(wrapper.find('.spot-storage-page__actions [data-test="save-storage-strategy"]').exists()).toBe(false);
+    expect(wrapper.find('[data-test="storage-strategy-list"] [data-test="save-storage-strategy"]').exists()).toBe(false);
+    expect(wrapper.find('[data-test="spot-storage-page-footer"] [data-test="save-storage-strategy"]').exists()).toBe(true);
   });
 
   it('binds /trading/spot-bid to a real page component', () => {
@@ -190,4 +259,11 @@ function getXAxisDataLength(option: ReturnType<typeof buildStoragePowerOption>) 
 
 function cloneStorageStrategyResult(): StorageStrategyResponse {
   return JSON.parse(JSON.stringify(defaultStorageStrategyResult)) as StorageStrategyResponse;
+}
+
+function mockStorageStrategyFetch() {
+  return vi.spyOn(globalThis, 'fetch').mockResolvedValue({
+    ok: true,
+    json: async () => cloneStorageStrategyResult(),
+  } as Response);
 }

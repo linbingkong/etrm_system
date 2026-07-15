@@ -2,6 +2,7 @@
 import type { StorageBidSegment, StorageStrategyResponse } from '../trading.types';
 
 const props = defineProps<{ result: StorageStrategyResponse; error: string }>();
+defineEmits<{ calculateProfit: [] }>();
 
 type SegmentField = keyof StorageBidSegment;
 type SegmentKind = 'charge' | 'discharge';
@@ -148,6 +149,9 @@ function removeSegment(kind: SegmentKind, index: number) {
         </table>
       </div>
     </div>
+    <div class="strategy-result__footer">
+      <button data-test="calculate-storage-profit" type="button" @click="$emit('calculateProfit')">收益测算</button>
+    </div>
   </section>
 </template>
 
@@ -222,6 +226,27 @@ function removeSegment(kind: SegmentKind, index: number) {
   background: rgba(0, 242, 254, 0.08);
   cursor: pointer;
   white-space: nowrap;
+}
+
+.strategy-result__footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(143, 155, 186, 0.14);
+}
+
+.strategy-result__footer button {
+  min-width: 120px;
+  border-color: rgba(0, 242, 254, 0.44);
+  color: var(--color-primary);
+  background: rgba(0, 242, 254, 0.08);
+}
+
+.strategy-result__footer button:hover {
+  border-color: rgba(0, 242, 254, 0.7);
+  background: rgba(0, 242, 254, 0.14);
+  box-shadow: 0 0 18px rgba(0, 242, 254, 0.14);
 }
 
 .strategy-result button:hover:not(:disabled) {

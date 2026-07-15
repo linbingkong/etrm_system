@@ -1,213 +1,32 @@
 # 项目工作进展与下一步计划
 
-> 本文档用于记录“山东电力交易辅助决策系统”的当前开发进展、待办事项和后续实施计划。后续每完成一个阶段或页面，应同步更新本文档。
+> 本文档用于记录“山东电力交易辅助决策系统”的当前开发进展、待办事项和后续实施计划。每完成一个阶段或页面，应同步更新本文档。
 
 ## 1. 当前总体状态
 
-项目已完成开发前期准备工作，并已进入页面开发阶段。当前已完成基础工程搭建、菜单规划、页面目录初始化、开发规范整理，以及“工作台首页”“市场行情总览”“价格监测”“价格预测”“交易总览”“现货交易申报”“D1 曲线申报”的实现与验证。
+项目已完成开发前期准备、首批 P0 页面开发、5.1 优先接口契约与首轮前端联调，并已完成数据库表结构、迁移方案、Alembic 基础配置、SQLAlchemy 模型、迁移脚本、PostgreSQL 迁移验证和基础数据 seed 落库。当前后端已提供策略管理、结算审核、系统用户/角色/菜单管理的内存态接口；前端相关页面已优先读取接口数据，并在接口不可用时保留页面 seed 数据用于离线展示与测试。
 
 ## 2. 已完成事项
 
 ### 2.1 项目文档与规范
 
-- 已整理项目需求与功能说明文档：
-  - `docs/山东电力交易辅助决策系统-PRD文档.md`
-  - `docs/山东电力交易辅助决策系统-功能清单.md`
-  - `docs/山东电力交易辅助决策系统-菜单规划.md`
-- 已创建并完善开发规范：
-  - `docs/standards/AI执行总纲.md`
-  - `docs/standards/AI编程规则.md`
-  - `docs/standards/frontend-development-guidelines.md`
-  - `docs/standards/backend-development-guidelines.md`
-- 已更新 `AGENTS.md`，用于指导后续 AI 协作与代码开发。
+- 已整理 PRD、功能清单、菜单规划等基础文档。
+- 已建立前端开发规范、后端开发规范、AI 执行总纲和 `AGENTS.md`。
+- 已在 `docs/pages` 下按菜单规划创建页面目录。
+- 已新增接口契约文档：`docs/api/priority-api-contracts.md`。
+- 已新增数据库设计文档：
+  - `docs/database/database-table-design.md`
+  - `docs/database/migration-plan.md`
 
 ### 2.2 工程基础
 
-- 已完成前端基础工程：
-  - Vue 3
-  - Vite
-  - TypeScript
-  - Pinia
-  - Element Plus
-  - ECharts
-- 已完成后端基础工程：
-  - FastAPI 应用结构
-  - 健康检查接口
-  - 菜单接口基础能力
-  - 菜单种子数据
-- 已建立基础测试与构建验证流程。
+- 前端：Vue 3、Vite、TypeScript、Pinia、Element Plus、ECharts。
+- 后端：FastAPI、Pydantic v2、SQLAlchemy Async 依赖、asyncpg、Redis 依赖。
+- 已建立前端和后端测试验证流程。
 
-### 2.3 菜单与页面目录
+### 2.3 首批页面完成清单
 
-- 已根据菜单规划完成 13 个一级菜单设计。
-- 已在 `docs/pages` 下按菜单页面创建对应目录。
-- 已在 `frontend/src/views` 下创建对应业务模块目录。
-- 已完成前端菜单配置与路由生成逻辑。
-- 当前 P2 菜单默认隐藏，符合菜单规划规则。
-
-### 2.4 已完成页面
-
-#### 工作台首页
-
-- 页面路径：`/dashboard`
-- 文档目录：`docs/pages/dashboard/home/`
-- 前端页面：`frontend/src/views/dashboard/DashboardHome.vue`
-- 已完成内容：
-  - 工作台头部
-  - KPI 指标卡片
-  - 价格趋势图
-  - 待办任务
-  - 通知公告
-  - 快捷入口
-  - 经营数据卡片
-- 已完成测试：
-  - `frontend/tests/dashboard-home.spec.ts`
-- 验证结果：
-  - `cd frontend; npm run test` 通过
-  - `cd frontend; npm run build` 通过
-
-### 2.5 已完成方案与原型
-
-#### 市场监测模块
-
-- 模块目录：`docs/pages/market-monitoring/`
-- 已完成文档：
-  - `docs/pages/market-monitoring/implementation-plan.md`
-  - `docs/pages/market-monitoring/prototype-design.md`
-- 已明确 V1 优先页面：
-  - 市场行情总览：`/market-monitoring/overview`
-  - 价格监测：`/market-monitoring/prices`
-  - 价格预测：`/market-monitoring/price-forecast`
-- 已明确第二阶段页面：
-  - 供需分析
-  - 跨省联络线
-  - 气象监测
-  - 交易日历
-  - 市场参数
-
-#### 交易管理模块
-
-- 模块目录：`docs/pages/trading/`
-- 已完成文档：
-  - `docs/pages/trading/implementation-plan.md`
-  - `docs/pages/trading/prototype-design.md`
-- 已明确 V1 优先页面：
-  - 交易总览：`/trading/overview`
-  - 现货交易申报：`/trading/spot-bid`
-  - D1 曲线申报：`/trading/d1-curve`
-- 已明确第二阶段页面：
-  - 中长期交易
-  - 交易待办
-  - 交易已办
-  - 滚动撮合
-  - 交易约束
-  - 限价管理
-
-### 2.6 市场监测页面
-
-#### 市场行情总览
-
-- 页面路径：`/market-monitoring/overview`
-- 前端页面：`frontend/src/views/market-monitoring/MarketOverview.vue`
-- 已完成内容：
-  - 筛选栏
-  - 6 个市场 KPI
-  - 日前/实时价格与负荷趋势图
-  - 供需概览
-  - 风险观察
-  - 交易节点
-  - 快捷入口
-  - 风险、供需、交易节点联动入口
-
-#### 价格监测
-
-- 页面路径：`/market-monitoring/prices`
-- 前端页面：`frontend/src/views/market-monitoring/MarketPrices.vue`
-- 已完成内容：
-  - 筛选栏
-  - 6 个价格监测 Tab
-  - 均价、峰值、谷值、最大价差摘要指标
-  - 日前/实时/价差组合图表
-  - 时段价格明细表
-  - 市场价格排名表
-  - 无权限导出禁用态
-
-已完成测试：
-
-- `frontend/tests/market-monitoring-overview.spec.ts`
-- `frontend/tests/market-monitoring-prices.spec.ts`
-- `frontend/tests/market-monitoring-price-forecast.spec.ts`
-
-#### 价格预测
-
-- 页面路径：`/market-monitoring/price-forecast`
-- 前端页面：`frontend/src/views/market-monitoring/PriceForecast.vue`
-- 文档目录：`docs/pages/market-monitoring/price-forecast/`
-- 已完成内容：
-  - 交易日期范围、市场类型、区域/节点、时间粒度、模型版本筛选展示
-  - 24/96 点预测数据切换
-  - 预测均价、最高预测价、高风险时段、平均预测偏差指标
-  - 预测价格、实际价格、置信区间和风险阈值图表
-  - 风险时段提示
-  - 时段预测明细表
-
-### 2.7 交易管理页面
-
-#### 交易总览
-
-- 页面路径：`/trading/overview`
-- 前端页面：`frontend/src/views/trading/TradingOverview.vue`
-- 已完成内容：
-  - 交易状态栏
-  - 6 个交易 KPI
-  - 交易流程进度
-  - 风险提醒
-  - 交易待办
-  - 交易结果摘要
-  - 快捷入口
-
-#### 现货交易申报
-
-- 页面路径：`/trading/spot-bid`
-- 前端页面：`frontend/src/views/trading/SpotBid.vue`
-- 已完成内容：
-  - 筛选栏
-  - 24/96 点切换
-  - 申报曲线图
-  - 量价申报表
-  - 校验结果
-  - 暂存、校验、提交、撤回、导出按钮状态
-
-#### D1 曲线申报
-
-- 页面路径：`/trading/d1-curve`
-- 前端页面：`frontend/src/views/trading/D1Curve.vue`
-- 已完成内容：
-  - 筛选栏
-  - D1 曲线图
-  - 曲线明细表
-  - 约束校验结果
-  - 保存草稿、校验、提交按钮状态
-
-已完成测试：
-
-- `frontend/tests/trading-overview.spec.ts`
-- `frontend/tests/trading-spot-bid.spec.ts`
-- `frontend/tests/trading-d1-curve.spec.ts`
-
-## 3. 当前未完成事项
-
-- 除“工作台首页”“市场监测 P0 页面”和“交易管理 V1 页面”外，其余菜单页面尚未正式开发。
-- 多数页面当前仍处于目录占位或占位路由状态。
-- 工作台首页当前使用前端 mock 数据，尚未接入真实后端业务接口。
-- 权限按钮、角色授权、页面级权限控制尚未进入完整实现阶段。
-- 业务数据模型、接口协议、异常处理、审计日志等后端能力仍需逐步补齐。
-
-## 4. 首批页面开发计划
-
-根据 `docs/山东电力交易辅助决策系统-菜单规划.md` 中的 V1 首批建设建议，后续优先开发以下页面。
-
-| 优先级 | 模块 | 页面 | 路由 | 状态 |
+| 序号 | 模块 | 页面 | 路由 | 状态 |
 |---:|---|---|---|---|
 | 1 | 工作台 | 工作台首页 | `/dashboard` | 已完成 |
 | 2 | 市场监测 | 市场行情总览 | `/market-monitoring/overview` | 已完成 |
@@ -216,70 +35,129 @@
 | 5 | 交易管理 | 交易总览 | `/trading/overview` | 已完成 |
 | 6 | 交易管理 | 现货交易申报 | `/trading/spot-bid` | 已完成 |
 | 7 | 交易管理 | D1 曲线申报 | `/trading/d1-curve` | 已完成 |
-| 8 | 合同管理 | 合同列表 | `/contracts/list` | 待开发 |
-| 9 | 结算管理 | 结算总览 | `/settlement/overview` | 待开发 |
-| 10 | 结算管理 | 结算审核 | `/settlement/review` | 待开发 |
-| 11 | 机组与发电 | 发电侧总览 | `/generation/overview` | 待开发 |
-| 12 | 负荷与用电 | 用电侧总览 | `/load/overview` | 待开发 |
-| 13 | 分析与报表 | 分析中心 | `/reports/analysis-center` | 待开发 |
-| 14 | 策略管理 | 策略列表 | `/strategy/list` | 待开发 |
-| 15 | 系统管理 | 用户管理 | `/system-admin/users` | 待开发 |
-| 16 | 系统管理 | 角色管理 | `/system-admin/roles` | 待开发 |
-| 17 | 系统管理 | 菜单管理 | `/system-admin/menus` | 待开发 |
+| 8 | 合同管理 | 合同列表 | `/contracts/list` | 已完成 |
+| 9 | 结算管理 | 结算总览 | `/settlement/overview` | 已完成 |
+| 10 | 结算管理 | 结算审核 | `/settlement/review` | 已完成 |
+| 11 | 机组与发电 | 发电侧总览 | `/generation/overview` | 已完成 |
+| 12 | 负荷与用电 | 用电侧总览 | `/load/overview` | 已完成 |
+| 13 | 分析与报表 | 分析中心 | `/reports/analysis-center` | 已完成 |
+| 14 | 策略管理 | 策略列表 | `/strategy/list` | 已完成 |
+| 15 | 系统管理 | 用户管理 | `/system-admin/users` | 已完成 |
+| 16 | 系统管理 | 角色管理 | `/system-admin/roles` | 已完成 |
+| 17 | 系统管理 | 菜单管理 | `/system-admin/menus` | 已完成 |
+
+### 2.4 第二批页面完成清单
+
+| 序号 | 模块 | 页面 | 路由 | 状态 |
+|---:|---|---|---|---|
+| 1 | 系统管理 | 权限节点 | `/system-admin/permission-nodes` | 已完成 |
+| 2 | 结算管理 | 结算单明细 | `/settlement/bills` | 已完成 |
+| 3 | 结算管理 | DA 费用审核 | `/settlement/da-fee-check` | 已完成 |
+| 4 | 结算管理 | RT 费用审核 | `/settlement/rt-fee-check` | 已完成 |
+| 5 | 交易管理 | 中长期交易 | `/trading/long-term` | 已完成 |
+| 6 | 交易管理 | 交易待办 | `/trading/todo` | 已完成 |
+| 7 | 交易管理 | 交易已办 | `/trading/done` | 已完成 |
+| 8 | 市场监测 | 交易日历 | `/market-monitoring/trading-calendar` | 已完成 |
+| 9 | 交易管理 | 交易约束 | `/trading/constraints` | 已完成 |
+| 10 | 系统管理 | 字典管理 | `/system-admin/dictionaries` | 已完成 |
+| 11 | 系统管理 | 配置管理 | `/system-admin/configurations` | 已完成 |
+| 12 | 市场监测 | 供需分析 | `/market-monitoring/supply-demand` | 已完成 |
+| 13 | 系统管理 | 消息通知 | `/system-admin/messages` | 已完成 |
+| 14 | 市场监测 | 跨省联络线 | `/market-monitoring/tie-line` | 已完成 |
+| 15 | 合同管理 | 合同模板 | `/contracts/templates` | 已完成 |
+| 16 | 系统管理 | 模板管理 | `/system-admin/templates` | 已完成 |
+| 17 | 市场监测 | 气象监测 | `/market-monitoring/weather` | 已完成 |
+| 18 | 合同管理 | 新建合同 | `/contracts/create` | 已完成 |
+| 19 | 系统管理 | 数据导入 | `/system-admin/imports` | 已完成 |
+| 20 | 系统管理 | 基础信息 | `/system-admin/basic-info` | 已完成 |
+| 21 | 市场监测 | 市场参数 | `/market-monitoring/market-params` | 已完成 |
+| 22 | 合同管理 | 到期提醒 | `/contracts/expiry-alerts` | 已完成 |
+| 23 | 系统管理 | 访问分析 | `/system-admin/visit-analysis` | 已完成 |
+| 24 | 分析与报表 | 盈亏分析 | `/reports/profit-loss` | 已完成 |
+| 25 | 分析与报表 | 月度报告 | `/reports/monthly-report` | 已完成 |
+| 26 | 分析与报表 | 数据导出 | `/reports/export` | 已完成 |
+| 27 | 分析与报表 | 统计分析 | `/reports/statistics` | 已完成 |
+| 28 | 分析与报表 | 对比分析 | `/reports/contrast` | 已完成 |
+| 29 | 分析与报表 | 站点分析 | `/reports/site-analysis` | 已完成 |
+| 30 | 分析与报表 | 图表管理 | `/reports/charts` | 已完成 |
+| 31 | 机组与发电 | 发电监测 | `/generation/monitoring` | 已完成 |
+| 32 | 机组与发电 | 火电运行 | `/generation/thermal` | 已完成 |
+| 33 | 机组与发电 | 新能源监测 | `/generation/new-energy` | 已完成 |
+| 34 | 负荷与用电 | 负荷监测 | `/load/monitoring` | 已完成 |
+| 35 | 负荷与用电 | 本地负荷 | `/load/local` | 已完成 |
+| 36 | 机组与发电 | 启停机管理 | `/generation/start-stop` | 已完成 |
+| 37 | 负荷与用电 | 自用电管理 | `/load/self-use` | 已完成 |
+| 38 | 负荷与用电 | 净负荷 | `/load/net-load` | 已完成 |
+| 39 | 机组与发电 | 光伏发电 | `/generation/pv` | 已完成 |
+
+## 3. 接口与数据库任务完成情况
+
+| 任务 | 完成情况 |
+|---|---|
+| 建立首批页面后端接口清单 | 已完成，见 `docs/api/priority-api-contracts.md` |
+| 策略列表与现货交易申报打通策略持久化接口 | 已完成内存态接口，新增 `/api/v1/strategies` 系列接口 |
+| 系统管理用户/角色/菜单 CRUD 与权限控制基础 | 已完成基础 CRUD 内存态接口，权限控制待后续深化 |
+| 结算审核通过、退回重算、异常标记接口 | 已完成 `/api/v1/settlement-review/tasks` 系列接口 |
+| 数据库表结构设计 | 已完成，见 `docs/database/database-table-design.md` |
+| 数据库迁移方案设计 | 已完成，见 `docs/database/migration-plan.md` |
+| Alembic 基础配置 | 已完成，新增 `backend/alembic.ini` 与 `backend/alembic/` |
+| SQLAlchemy 模型 | 已完成，覆盖策略、结算审核、用户、角色、菜单、权限、审计日志 |
+| 首个迁移脚本 | 已完成，新增 `20260706_0001_create_core_business_tables.py` |
+| 菜单路径约束调整迁移 | 已完成，新增 `20260706_0002_allow_duplicate_menu_paths.py`，允许目录与默认页复用路由 |
+| Seed 幂等 upsert 服务 | 已完成，新增 `backend/app/services/database_seed.py` 与 `backend/app/cli/seed_database.py` |
+| PostgreSQL 连接配置 | 已完成，`backend/.env` 指向 `192.168.50.167:5432/etrm` |
+| Alembic upgrade/downgrade 验证 | 已完成，当前版本 `20260706_0002` |
+| 核心业务表创建 | 已完成，已创建 11 张业务表和 `alembic_version` |
+| 基础数据 seed 执行 | 已完成，已写入 4 个用户、4 个角色、101 个菜单、125 个权限及角色授权关系 |
+| 策略管理数据库 repository | 已完成，`/api/v1/strategies` 已从内存 store 切换为 PostgreSQL repository，并补充 SQLite 隔离集成测试 |
+| 结算审核数据库 repository | 已完成，`/api/v1/settlement-review/tasks` 已从内存 store 切换为 PostgreSQL repository，支持审核、退回、重算、异常标记和操作日志 |
+| 系统管理数据库 repository | 已完成，`/api/v1/system/users`、`/roles`、`/menus` 已从内存 store 切换为 PostgreSQL repository，支持用户角色关系、角色成员数和权限数聚合 |
+| 登录态与接口鉴权 | 已完成，新增 `/api/v1/auth/login`、`/auth/me`，策略、结算审核、系统管理接口已接入 Bearer token 与权限码校验 |
+| 结算审核轨迹接口 | 已完成，新增 `/api/v1/settlement-review/tasks/{task_id}/logs`，前端 API 已补充日志查询入口 |
+| 结算审核轨迹前端展示 | 已完成，`/settlement/review` 已新增审核轨迹面板，支持按结算单切换查看状态流转和操作说明 |
+| 系统管理角色授权 | 已完成，新增 `/api/v1/system/roles/{role_id}/authorization` 查询与更新接口，支持角色菜单和权限点调整 |
+| 关键动作审计与规则 | 已完成，结算审核动作和策略提交已写入 `audit_logs`，结算审核重复审批等非法状态流转返回 409 |
+| 权限节点前端页面 | 已完成，新增 `/system-admin/permission-nodes`，支持角色授权查询、菜单权限勾选、按钮权限勾选和授权保存 |
+| 第二批结算页面 | 已完成，新增 `/settlement/bills`、`/settlement/da-fee-check`、`/settlement/rt-fee-check`，当前使用前端 mock 数据并预留后端接口接入 |
+| 第二批交易页面 | 已完成，新增 `/trading/long-term`、`/trading/todo`、`/trading/done`、`/trading/constraints`，覆盖中长期台账、交易待办、交易已办查询和交易约束复核 |
+| 第二批市场监测页面 | 已完成，新增 `/market-monitoring/trading-calendar`、`/market-monitoring/supply-demand`、`/market-monitoring/tie-line`、`/market-monitoring/market-params`，覆盖交易节点时间轴、供需裕度、风险时段、联络线通道利用率、阻塞风险和市场规则参数 |
+| 第二批合同页面 | 已完成，新增 `/contracts/templates`、`/contracts/create`、`/contracts/expiry-alerts`，覆盖合同模板、新建合同和到期续签提醒 |
+| 第二批系统管理页面 | 已完成，新增 `/system-admin/dictionaries`、`/system-admin/configurations`、`/system-admin/messages`、`/system-admin/visit-analysis`，覆盖基础字典、系统参数、交易阈值、集成配置、消息通知和访问分析 |
+| 第二批分析报表页面 | 已完成，新增 `/reports/profit-loss`、`/reports/monthly-report`、`/reports/export`、`/reports/statistics`、`/reports/contrast`、`/reports/site-analysis`、`/reports/charts`，覆盖交易收益、偏差成本、结算损益、收益归因、经营月报章节汇总、报表导出任务管理、统计分析、对比分析、站点分析和图表管理 |
+| 第二批发电侧页面 | 进行中，新增 `/generation/monitoring`、`/generation/thermal`、`/generation/new-energy`、`/generation/start-stop`、`/generation/pv`，覆盖机组出力、计划完成率、偏差、异常状态、火电运行状态、爬坡、启停、约束信息、风光出力、预测偏差、弃电、消纳风险、启停计划、执行跟踪、光伏装机容量、实时出力和等效利用小时 |
+| 第二批负荷侧页面 | 进行中，新增 `/load/monitoring`、`/load/local`、`/load/self-use`、`/load/net-load`，覆盖全省负荷、区域负荷、峰谷、预测偏差、告警、本地用电负荷、分区负荷、交易申报口径、发电厂自用电、自用电率、厂用负荷、异常偏差、系统净负荷和调节风险 |
+
+## 4. 当前未完成事项
+
+- 登录态目前采用开发期 Bearer token 方案，token 暂以账号标识，后续需替换为正式密码校验、JWT 签发和刷新机制。
+- 导出、报表订阅等动作仍需补齐业务规则和审计日志。
+- 第二批菜单除权限节点、字典管理、配置管理、消息通知、模板管理、数据导入、基础信息、访问分析、结算三页、交易四页、交易日历、供需分析、跨省联络线、气象监测、市场参数、合同模板、新建合同、到期提醒、盈亏分析、月度报告、数据导出、统计分析、对比分析、站点分析、图表管理、发电监测、火电运行、新能源监测、负荷监测、本地负荷、启停机管理、自用电管理、净负荷和光伏发电外仍多为占位页或仅有目录。
 
 ## 5. 下一步工作计划
 
-### 5.1 推荐下一项任务
+### 5.1 推荐优先任务
 
-优先开发：
+1. 继续第二批菜单页面开发，下一组建议为负荷侧 `/load/curtailment`，或发电侧 `/generation/units`。
+2. 将开发期 Bearer token 替换为正式认证方案，补充密码哈希、JWT、刷新 token 和退出登录。
+3. 将权限节点页面与正式登录态、细粒度按钮权限进一步联动。
+4. 补齐导出、报表订阅等动作的业务规则与审计日志。
+5. 规划结算审核日志在前端页面中的展示组件和交互。
 
-- 页面：合同管理 / 合同列表
-- 路由：`/contracts/list`
-- 文档目录：`docs/pages/contracts/list/`
+### 5.2 后续页面建议
 
-### 5.2 执行步骤
+- 结算管理：DA 费用审核 `/settlement/da-fee-check`、RT 费用审核 `/settlement/rt-fee-check` 已完成；后续可补齐台账导出和后端接口
+- 交易管理：中长期交易、交易待办、交易已办、交易约束已完成；后续补齐滚动撮合和限价管理
+- 市场监测：交易日历、供需分析、跨省联络线、气象监测、市场参数已完成；后续可接入后端市场参数接口和变更审计
+- 系统管理：权限节点、字典管理、配置管理、消息通知、模板管理、数据导入、基础信息、访问分析已完成；后续可接入访问统计接口和审计日志联动
 
-1. 在页面目录下创建 `implementation-plan.md`。
-2. 基于视觉规范 `docs/pages/pages_design_V1.md` 创建 `prototype-design.md`。
-3. 实现前端页面组件与 mock 数据。
-4. 将页面接入真实路由。
-5. 补充单元测试。
-6. 执行验证：
-   - `cd frontend; npm run test`
-   - `cd frontend; npm run build`
-7. 更新本文档中的完成状态。
+### 5.3 验证命令
 
-## 6. 后续更新规则
+- 后端：`cd backend; python -m pytest -q`
+- 前端测试：`cd frontend; npm run test`
+- 前端构建：`cd frontend; npm run build`
 
-每完成一个页面或阶段，应更新以下内容：
+## 6. 更新规则
 
-- 在“已完成事项”中补充完成页面和关键能力。
-- 在“首批页面开发计划”中更新对应状态。
-- 在“当前未完成事项”中移除已解决问题。
-- 在“下一步工作计划”中调整下一项优先任务。
-- 补充测试与构建验证结果。
-
-## 7. 现货交易申报重设计记录
-
-- 页面：交易管理 / 现货交易申报
-- 路由：`/trading/spot-bid`
-- 本次调整：页面由通用量价申报点表，重设计为“独立储能日前报量报价策略生成”工作台。
-- 已接入后端接口：`POST /api/v1/trading/spot-bid/storage-strategy`
-- 核心能力：
-  - 预测日前电价 24/96 点展示
-  - 储能参数展示与策略生成
-  - 充电/放电量价分段表
-  - 充放电功率与 SOC 曲线
-  - 策略收益测算
-- 相关测试：
-  - `backend/tests/test_storage_strategy.py`
-  - `frontend/tests/trading-spot-bid.spec.ts`
-
-建议页面状态使用以下枚举：
-
-- `待开发`
-- `方案设计中`
-- `原型已完成`
-- `开发中`
-- `已完成`
-- `需返工`
+- 每完成一个页面，在页面完成清单中更新状态。
+- 每完成接口联调或数据库迁移阶段，在任务清单中更新完成情况。
+- 每次新增页面、接口或迁移需同步补充方案、测试、文档和路由/接口绑定。

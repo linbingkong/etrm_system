@@ -1,15 +1,18 @@
 import type {
   D1CurvePoint,
+  LongTermTradeContract,
   SpotBidPoint,
   StorageStrategyDraft,
   StorageStrategyRequest,
   StorageStrategyResponse,
   TradingKpi,
+  TradingConstraintRule,
   TradingPointMode,
   TradingProgressStep,
   TradingRisk,
   TradingSession,
   TradingTodo,
+  TradingWorkItem,
   ValidationItem,
 } from './trading.types';
 
@@ -48,6 +51,34 @@ export const tradingTodos: TradingTodo[] = [
   { id: 'todo-1', title: '补全现货 96 点申报', module: '现货交易', priority: 'high', dueText: '28 分钟后截止', path: '/trading/spot-bid' },
   { id: 'todo-2', title: '提交 D1 曲线草稿', module: '曲线申报', priority: 'medium', dueText: '今日 16:30', path: '/trading/d1-curve' },
   { id: 'todo-3', title: '复核交易约束参数', module: '交易约束', priority: 'low', dueText: '今日 18:00', path: '/trading/constraints' },
+];
+
+export const longTermContracts: LongTermTradeContract[] = [
+  { id: 'lt-202606-001', variety: '年度双边协商', counterparty: '鲁中售电公司', period: '2026-06 至 2026-12', volumeMwh: 128000, price: 372.6, progress: 64, status: 'executing' },
+  { id: 'lt-202606-002', variety: '月度集中竞价', counterparty: '华北发电集团', period: '2026-06', volumeMwh: 46200, price: 386.4, progress: 82, status: 'pending-confirm' },
+  { id: 'lt-202606-003', variety: '绿电交易', counterparty: '山东新能源联合体', period: '2026-07', volumeMwh: 31800, price: 402.1, progress: 35, status: 'executing' },
+  { id: 'lt-202606-004', variety: '挂牌交易', counterparty: '鲁南工业园区', period: '2026-06', volumeMwh: 18600, price: 365.8, progress: 100, status: 'completed' },
+  { id: 'lt-202606-005', variety: '月内滚动交易', counterparty: '济南负荷聚合商', period: '2026-06 下旬', volumeMwh: 9400, price: 394.2, progress: 42, status: 'warning' },
+];
+
+export const tradingWorkItems: TradingWorkItem[] = [
+  { id: 'work-1', title: '补全现货 96 点报量报价', module: '现货交易申报', priority: 'high', deadline: '今日 15:58', owner: '交易员A', status: 'todo', relatedNo: 'SPOT-20260615-01', path: '/trading/spot-bid' },
+  { id: 'work-2', title: '提交 D1 曲线申报草稿', module: 'D1 曲线申报', priority: 'medium', deadline: '今日 16:30', owner: '交易员B', status: 'processing', relatedNo: 'D1-20260615-02', path: '/trading/d1-curve' },
+  { id: 'work-3', title: '确认月度集中竞价成交结果', module: '中长期交易', priority: 'high', deadline: '今日 17:00', owner: '交易主管', status: 'todo', relatedNo: 'LT-202606-002', path: '/trading/long-term' },
+  { id: 'work-4', title: '复核储能交易约束参数', module: '交易约束', priority: 'low', deadline: '今日 18:00', owner: '策略员', status: 'todo', relatedNo: 'RULE-20260615-01', path: '/trading/constraints' },
+  { id: 'work-5', title: '现货申报校验通过并提交', module: '现货交易申报', priority: 'medium', deadline: '今日 14:55', owner: '交易员A', status: 'done', result: '已提交', relatedNo: 'SPOT-20260615-00', path: '/trading/spot-bid' },
+  { id: 'work-6', title: 'D1 曲线退回后重提', module: 'D1 曲线申报', priority: 'high', deadline: '今日 14:20', owner: '交易员B', status: 'returned', result: '已重提', relatedNo: 'D1-20260615-01', path: '/trading/d1-curve' },
+  { id: 'work-7', title: '年度双边合约确认', module: '中长期交易', priority: 'medium', deadline: '昨日 17:30', owner: '交易主管', status: 'done', result: '确认完成', relatedNo: 'LT-202606-001', path: '/trading/long-term' },
+];
+
+export const tradingConstraintRules: TradingConstraintRule[] = [
+  { id: 'rule-1', category: 'unit', name: '机组最大出力约束', target: '鲁中交易单元', parameter: '最大出力', limitText: '0-4,800 MW', effectivePeriod: '2026-06-15 全天', impactModule: 'D1 曲线申报', status: 'active', owner: '调度专责' },
+  { id: 'rule-2', category: 'unit', name: '爬坡速率约束', target: '鲁中交易单元', parameter: '15 分钟爬坡', limitText: '≤ 420 MW', effectivePeriod: '17:00-21:00', impactModule: 'D1 曲线申报', status: 'warning', owner: '调度专责' },
+  { id: 'rule-3', category: 'storage', name: '储能充放电功率约束', target: 'storage-001', parameter: '充/放电功率', limitText: '充电 -100 MW，放电 90 MW', effectivePeriod: '2026-06-15 全天', impactModule: '现货交易申报', status: 'review', owner: '策略员' },
+  { id: 'rule-4', category: 'storage', name: 'SOC 边界约束', target: 'storage-001', parameter: 'SOC', limitText: '5%-98%，期末目标 5%', effectivePeriod: '2026-06-15 全天', impactModule: '储能策略生成', status: 'active', owner: '策略员' },
+  { id: 'rule-5', category: 'price', name: '现货申报价格上下限', target: '日前/实时市场', parameter: '申报电价', limitText: '-80 至 1,300 元/MWh', effectivePeriod: '2026-06-15 全天', impactModule: '现货交易申报', status: 'active', owner: '交易主管' },
+  { id: 'rule-6', category: 'price', name: '价差偏离预警', target: '鲁中节点', parameter: '日前实时价差', limitText: '价差 > 100 元/MWh 预警', effectivePeriod: '滚动监测', impactModule: '价格监测', status: 'warning', owner: '风控专责' },
+  { id: 'rule-7', category: 'declaration', name: '申报完整性约束', target: '现货 96 点申报', parameter: '缺失点', limitText: '不得缺失，需通过上下限校验', effectivePeriod: '申报窗口内', impactModule: '交易待办', status: 'review', owner: '交易员A' },
 ];
 
 const baseSpotPoints: SpotBidPoint[] = Array.from({ length: 96 }, (_, index) => {

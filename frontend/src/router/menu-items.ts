@@ -53,7 +53,7 @@ export const menuItems: MenuItem[] = [
     page('market-monitoring', 'tie-line', '跨省联络线', '/market-monitoring/tie-line', 'P1', 5),
     page('market-monitoring', 'weather', '气象监测', '/market-monitoring/weather', 'P1', 6),
     page('market-monitoring', 'trading-calendar', '交易日历', '/market-monitoring/trading-calendar', 'P1', 7),
-    page('market-monitoring', 'market-params', '市场参数', '/market-monitoring/market-params', 'P2', 8),
+    page('market-monitoring', 'market-params', '市场参数', '/market-monitoring/market-params', 'P1', 8),
   ]),
   directory('trading', '交易管理', '/trading', 3, [
     page('trading', 'overview', '交易总览', '/trading/overview', 'P0', 1),
@@ -70,7 +70,7 @@ export const menuItems: MenuItem[] = [
     page('contracts', 'list', '合同列表', '/contracts/list', 'P0', 1),
     page('contracts', 'create', '新建合同', '/contracts/create', 'P0', 2),
     page('contracts', 'templates', '合同模板', '/contracts/templates', 'P1', 3),
-    page('contracts', 'expiry-alerts', '到期提醒', '/contracts/expiry-alerts', 'P2', 4),
+    page('contracts', 'expiry-alerts', '到期提醒', '/contracts/expiry-alerts', 'P1', 4),
   ]),
   directory('settlement', '结算管理', '/settlement', 5, [
     page('settlement', 'overview', '结算总览', '/settlement/overview', 'P0', 1),
@@ -146,7 +146,7 @@ export const menuItems: MenuItem[] = [
     page('system-admin', 'templates', '模板管理', '/system-admin/templates', 'P1', 8),
     page('system-admin', 'imports', '数据导入', '/system-admin/imports', 'P1', 9),
     page('system-admin', 'basic-info', '基础信息', '/system-admin/basic-info', 'P1', 10),
-    page('system-admin', 'visit-analysis', '访问分析', '/system-admin/visit-analysis', 'P2', 11),
+    page('system-admin', 'visit-analysis', '访问分析', '/system-admin/visit-analysis', 'P1', 11),
   ]),
   directory('integrations', '第三方集成', '/integrations', 13, [
     page('integrations', 'realtime', '实时通信监控', '/integrations/realtime', 'P0', 1),

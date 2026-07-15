@@ -5,6 +5,7 @@ export async function requestJson<T>(path: string, init?: RequestInit): Promise<
     ...init,
     headers: {
       'Content-Type': 'application/json',
+      Authorization: import.meta.env.VITE_DEV_AUTH_TOKEN ?? 'Bearer admin',
       ...init?.headers,
     },
   });
