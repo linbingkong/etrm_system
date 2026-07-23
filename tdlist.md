@@ -88,7 +88,39 @@
 | 36 | 机组与发电 | 启停机管理 | `/generation/start-stop` | 已完成 |
 | 37 | 负荷与用电 | 自用电管理 | `/load/self-use` | 已完成 |
 | 38 | 负荷与用电 | 净负荷 | `/load/net-load` | 已完成 |
-| 39 | 机组与发电 | 光伏发电 | `/generation/pv` | 已完成 |
+| 39 | 负荷与用电 | 弃电管理 | `/load/curtailment` | 已完成 |
+| 40 | 机组与发电 | 机组管理 | `/generation/units` | 已完成 |
+| 41 | 负荷与用电 | 省间负荷 | `/load/province-load` | 已完成 |
+| 42 | 机组与发电 | 发电目标 | `/generation/targets` | 已完成 |
+| 43 | 机组与发电 | 绿电目标 | `/generation/green-energy-targets` | 已完成 |
+| 44 | 机组与发电 | 设备检测 | `/generation/equipment-check` | 已完成 |
+| 45 | 售电管理 | 售电总览 | `/retail/overview` | 已完成 |
+| 46 | 售电管理 | 售电产品结构 | `/retail/product-structure` | 已完成 |
+| 47 | 售电管理 | 套餐管理 | `/retail/packages` | 已完成 |
+| 48 | 考核管理 | 双考核分析 | `/assessment/two-assessment-analysis` | 已完成 |
+| 49 | 考核管理 | 双准则检查 | `/assessment/two-criteria-check` | 已完成 |
+| 50 | 考核管理 | 准则信息查询 | `/assessment/criteria-info` | 已完成 |
+| 51 | 考核管理 | 其他审核 | `/assessment/other-check` | 已完成 |
+| 52 | 考核管理 | 考核参数配置 | `/assessment/criteria-config` | 已完成 |
+| 53 | 考核管理 | 恢复审核 | `/assessment/recover-check` | 已完成 |
+| 54 | 策略管理 | 新增策略 | `/strategy/create` | 已完成 |
+| 55 | 第三方集成 | 实时通信监控 | `/integrations/realtime` | 已完成 |
+| 56 | 第三方集成 | 山东数据 API | `/integrations/shandong-api` | 已完成 |
+| 57 | 第三方集成 | 市场大屏 | `/integrations/market-board` | 已完成 |
+| 58 | 第三方集成 | Token 登录配置 | `/integrations/token-login` | 已完成 |
+| 59 | 第三方集成 | 文件在线预览 | `/integrations/file-preview` | 已完成 |
+| 60 | 工作台 | 快捷导航配置 | `/dashboard/quick-nav` | 已完成 |
+| 61 | 工作台 | 通知中心 | `/dashboard/notices` | 已完成 |
+| 62 | 交易管理 | 滚动撮合 | `/trading/rolling-matching` | 已完成 |
+| 63 | 交易管理 | 限价管理 | `/trading/price-limits` | 已完成 |
+| 64 | 结算管理 | 月度交易审核 | `/settlement/monthly-deal-check` | 已完成 |
+| 65 | 结算管理 | 结算均价分析 | `/settlement/average-price` | 已完成 |
+| 66 | 结算管理 | 修正统计 | `/settlement/corrections` | 已完成 |
+| 67 | 分析与报表 | 相似分析 | `/reports/similar-analysis` | 已完成 |
+| 68 | 策略管理 | 经济策略 | `/strategy/economic` | 已完成 |
+| 69 | 策略管理 | 策略介绍 | `/strategy/intro` | 已完成 |
+| 70 | 策略管理 | 月度模型 | `/strategy/monthly-model` | 已完成 |
+| 71 | 策略管理 | 权重管理 | `/strategy/weights` | 已完成 |
 
 ## 3. 接口与数据库任务完成情况
 
@@ -118,26 +150,29 @@
 | 系统管理角色授权 | 已完成，新增 `/api/v1/system/roles/{role_id}/authorization` 查询与更新接口，支持角色菜单和权限点调整 |
 | 关键动作审计与规则 | 已完成，结算审核动作和策略提交已写入 `audit_logs`，结算审核重复审批等非法状态流转返回 409 |
 | 权限节点前端页面 | 已完成，新增 `/system-admin/permission-nodes`，支持角色授权查询、菜单权限勾选、按钮权限勾选和授权保存 |
-| 第二批结算页面 | 已完成，新增 `/settlement/bills`、`/settlement/da-fee-check`、`/settlement/rt-fee-check`，当前使用前端 mock 数据并预留后端接口接入 |
-| 第二批交易页面 | 已完成，新增 `/trading/long-term`、`/trading/todo`、`/trading/done`、`/trading/constraints`，覆盖中长期台账、交易待办、交易已办查询和交易约束复核 |
+| 第二批结算页面 | 已完成，新增 `/settlement/bills`、`/settlement/da-fee-check`、`/settlement/rt-fee-check`、`/settlement/monthly-deal-check`、`/settlement/average-price`、`/settlement/corrections`，当前使用前端 mock 数据并预留后端接口接入 |
+| 第二批交易页面 | 已完成，新增 `/trading/long-term`、`/trading/todo`、`/trading/done`、`/trading/constraints`、`/trading/rolling-matching`、`/trading/price-limits`，覆盖中长期台账、交易待办、交易已办查询、交易约束复核、滚动撮合和限价管理 |
 | 第二批市场监测页面 | 已完成，新增 `/market-monitoring/trading-calendar`、`/market-monitoring/supply-demand`、`/market-monitoring/tie-line`、`/market-monitoring/market-params`，覆盖交易节点时间轴、供需裕度、风险时段、联络线通道利用率、阻塞风险和市场规则参数 |
 | 第二批合同页面 | 已完成，新增 `/contracts/templates`、`/contracts/create`、`/contracts/expiry-alerts`，覆盖合同模板、新建合同和到期续签提醒 |
 | 第二批系统管理页面 | 已完成，新增 `/system-admin/dictionaries`、`/system-admin/configurations`、`/system-admin/messages`、`/system-admin/visit-analysis`，覆盖基础字典、系统参数、交易阈值、集成配置、消息通知和访问分析 |
-| 第二批分析报表页面 | 已完成，新增 `/reports/profit-loss`、`/reports/monthly-report`、`/reports/export`、`/reports/statistics`、`/reports/contrast`、`/reports/site-analysis`、`/reports/charts`，覆盖交易收益、偏差成本、结算损益、收益归因、经营月报章节汇总、报表导出任务管理、统计分析、对比分析、站点分析和图表管理 |
-| 第二批发电侧页面 | 进行中，新增 `/generation/monitoring`、`/generation/thermal`、`/generation/new-energy`、`/generation/start-stop`、`/generation/pv`，覆盖机组出力、计划完成率、偏差、异常状态、火电运行状态、爬坡、启停、约束信息、风光出力、预测偏差、弃电、消纳风险、启停计划、执行跟踪、光伏装机容量、实时出力和等效利用小时 |
-| 第二批负荷侧页面 | 进行中，新增 `/load/monitoring`、`/load/local`、`/load/self-use`、`/load/net-load`，覆盖全省负荷、区域负荷、峰谷、预测偏差、告警、本地用电负荷、分区负荷、交易申报口径、发电厂自用电、自用电率、厂用负荷、异常偏差、系统净负荷和调节风险 |
+| 第二批分析报表页面 | 已完成，新增 `/reports/profit-loss`、`/reports/monthly-report`、`/reports/export`、`/reports/statistics`、`/reports/contrast`、`/reports/site-analysis`、`/reports/charts`、`/reports/similar-analysis`，覆盖交易收益、偏差成本、结算损益、收益归因、经营月报章节汇总、报表导出任务管理、统计分析、对比分析、站点分析、图表管理和相似分析 |
+| 第二批发电侧页面 | 进行中，新增 `/generation/monitoring`、`/generation/thermal`、`/generation/new-energy`、`/generation/start-stop`、`/generation/units`、`/generation/targets`、`/generation/green-energy-targets`、`/generation/equipment-check`，覆盖机组出力、计划完成率、偏差、异常状态、火电运行状态、爬坡、启停、约束信息、风光出力、预测偏差、消纳风险、启停计划、执行跟踪、装机容量、可用容量、在运机组、检修计划、运行风险、计划电量、实际电量、目标偏差、执行预警、绿电目标电量、绿电缺口、绿证支撑、合约支撑、设备健康度、异常设备、待检修任务和缺陷风险；独立光伏发电页已删除，光伏场站分析合并到新能源监测，支持起止时间选择，光伏展示出力与辐照度，风电及风光互补展示出力与风速 |
+| 第二批负荷侧页面 | 进行中，新增 `/load/monitoring`、`/load/local`、`/load/self-use`、`/load/net-load`、`/load/curtailment`、`/load/province-load`，覆盖全省负荷、区域负荷、峰谷、预测偏差、告警、本地用电负荷、分区负荷、交易申报口径、发电厂自用电、自用电率、厂用负荷、异常偏差、系统净负荷、弃电电量、弃电率、限发原因、消纳风险、弃电趋势、场站排行、原因分布、跨省交换、输入负荷、输出负荷和偏差风险 |
+| 第二批售电页面 | 已完成，新增 `/retail/overview`、`/retail/product-structure`、`/retail/packages`，覆盖售电客户、签约电量、套餐结构、实际用电、偏差率、预估收益、风险客户、产品类型、收益贡献、毛利率、风险暴露、套餐配置、定价方式、收益目标和调价风险 |
+| 第二批考核页面 | 已完成，新增 `/assessment/two-assessment-analysis`、`/assessment/two-criteria-check`、`/assessment/criteria-info`、`/assessment/other-check`、`/assessment/criteria-config`、`/assessment/recover-check`，覆盖考核费用、指标偏差、风险主体、高风险主体、整改建议、准则覆盖率、异常检查项、扣分风险、整改状态、有效准则、高风险条款、计算口径、适用主体、其他考核项审核、争议金额、超时提醒、启用参数、待审批变更、高风险阈值、恢复申请、待恢复金额、证据完整率和审批超时风险 |
+| 第二批策略页面 | 已完成，新增 `/strategy/economic`、`/strategy/intro`、`/strategy/monthly-model`、`/strategy/weights`，覆盖经济策略、策略介绍、月度模型和权重管理 |
 
 ## 4. 当前未完成事项
 
 - 登录态目前采用开发期 Bearer token 方案，token 暂以账号标识，后续需替换为正式密码校验、JWT 签发和刷新机制。
 - 导出、报表订阅等动作仍需补齐业务规则和审计日志。
-- 第二批菜单除权限节点、字典管理、配置管理、消息通知、模板管理、数据导入、基础信息、访问分析、结算三页、交易四页、交易日历、供需分析、跨省联络线、气象监测、市场参数、合同模板、新建合同、到期提醒、盈亏分析、月度报告、数据导出、统计分析、对比分析、站点分析、图表管理、发电监测、火电运行、新能源监测、负荷监测、本地负荷、启停机管理、自用电管理、净负荷和光伏发电外仍多为占位页或仅有目录。
+- 菜单规划中的页面级路由已完成真实组件绑定；后续重点从占位页补齐转为接口联调、业务规则、审计日志和数据持久化。
 
 ## 5. 下一步工作计划
 
 ### 5.1 推荐优先任务
 
-1. 继续第二批菜单页面开发，下一组建议为负荷侧 `/load/curtailment`，或发电侧 `/generation/units`。
+1. 菜单规划页面已完成真实组件绑定，下一步建议按业务优先级开展接口联调和数据持久化。
 2. 将开发期 Bearer token 替换为正式认证方案，补充密码哈希、JWT、刷新 token 和退出登录。
 3. 将权限节点页面与正式登录态、细粒度按钮权限进一步联动。
 4. 补齐导出、报表订阅等动作的业务规则与审计日志。
@@ -145,8 +180,8 @@
 
 ### 5.2 后续页面建议
 
-- 结算管理：DA 费用审核 `/settlement/da-fee-check`、RT 费用审核 `/settlement/rt-fee-check` 已完成；后续可补齐台账导出和后端接口
-- 交易管理：中长期交易、交易待办、交易已办、交易约束已完成；后续补齐滚动撮合和限价管理
+- 结算管理：DA 费用审核、RT 费用审核、月度交易审核、结算均价分析、修正统计已完成；后续可补齐台账导出和后端接口
+- 交易管理：中长期交易、交易待办、交易已办、滚动撮合、交易约束、限价管理已完成；后续可接入后端规则校验和审计日志
 - 市场监测：交易日历、供需分析、跨省联络线、气象监测、市场参数已完成；后续可接入后端市场参数接口和变更审计
 - 系统管理：权限节点、字典管理、配置管理、消息通知、模板管理、数据导入、基础信息、访问分析已完成；后续可接入访问统计接口和审计日志联动
 

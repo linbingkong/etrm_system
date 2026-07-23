@@ -7,10 +7,10 @@ describe('menuItems', () => {
     expect(menuItems).toHaveLength(13);
   });
 
-  it('contains 89 page menu items', () => {
+  it('contains 88 page menu items', () => {
     const pageMenus = flattenMenuItems(menuItems).filter((item) => item.type === 'menu');
 
-    expect(pageMenus).toHaveLength(89);
+    expect(pageMenus).toHaveLength(88);
   });
 
   it('contains key routes and permissions', () => {
@@ -34,6 +34,14 @@ describe('menuItems', () => {
     expect(visiblePaths).toContain('/market-monitoring/market-params');
     expect(visiblePaths).toContain('/contracts/expiry-alerts');
     expect(visiblePaths).toContain('/system-admin/visit-analysis');
+  });
+
+  it('removes photovoltaic detail page from the menu model', () => {
+    const allPaths = flattenMenuItems(menuItems).map((item) => item.path);
+    const visiblePaths = flattenMenuItems(visibleMenuItems(menuItems)).map((item) => item.path);
+
+    expect(allPaths).not.toContain('/generation/pv');
+    expect(visiblePaths).not.toContain('/generation/pv');
   });
 
   it('hides P2 page menus by default', () => {
